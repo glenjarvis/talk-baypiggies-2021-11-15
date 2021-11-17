@@ -9,7 +9,6 @@ jobs:
     steps:
       - checkout
 
-      # Download and cache dependencies
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "requirements.txt" }}
@@ -21,8 +20,8 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            pip install --upgrade pip
             pip install -r requirements.txt
+            pip install --upgrade pip
 
       - save_cache:
           paths:
@@ -34,9 +33,6 @@ jobs:
           name: run unit tests
           command: |
             source venv/bin/activate
-            #python manage.py test --exclude-tag functional_test
-
-#      - store_artifacts:
-#          path: test-reports
-#          destination: test-reports
-#
+            pylint check_recipe_health.py
+            pycodestyle check_recipe_health.py
+            python check_recipe_health.py
